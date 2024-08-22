@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -13,30 +15,29 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser,HasMedia
+class User extends Authenticatable implements FilamentUser, HasMedia
 {
     use HasApiTokens, HasFactory, Notifiable;
     use HasRoles;
     use InteractsWithMedia;
 
 
-
-protected $guarded=[];
+    protected $guarded = [];
 
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
-           if(auth()->user()->is_admin)
-               return true;
+            if (auth()->user()->is_admin)
+                return true;
         }
 
 
         if ($panel->getId() === 'user') {
-            if(!auth()->user()->is_admin)
+            if (!auth()->user()->is_admin)
                 return true;
         }
 
-return false;
+        return false;
 
     }
 
@@ -74,4 +75,15 @@ return false;
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
 }

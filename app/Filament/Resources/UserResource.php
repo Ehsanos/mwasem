@@ -26,16 +26,18 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Toggle::make('is_admin')->label('أدمن '),
-                Forms\Components\Toggle::make('is_active')->label('مفعل '),
+                Forms\Components\Toggle::make('is_admin')->label('أدمن ')->onIcon('heroicon-m-bolt')
+                    ->offIcon('heroicon-m-user') ->onColor('success')
+                    ->offColor('danger'),
+                Forms\Components\Toggle::make('is_active')->label('مفعل/غيرمفعل ')->offColor('danger')->onColor('success'),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('صورة المستخدم')->collection('users')->columnSpanFull(),
-                Forms\Components\TextInput::make('name')->label('اسم المستخدم'),
+                Forms\Components\TextInput::make('name')->label('اسم المستخدم')->required(),
                 Forms\Components\TextInput::make('email')->label('البريد الالكتروني'),
                 Forms\Components\TextInput::make('password')->label('كلمة المرور')->password()->revealable()
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->dehydrated(fn ($state) => filled($state)),
                 Forms\Components\TextInput::make('phone')->label('رقم الهاتف'),
-                Forms\Components\Select::make('city_id')->options(City::all()->pluck('name','id'))->label('مدينة/بلدة'),
+                Forms\Components\Select::make('city_id')->options(City::all()->pluck('name','id'))->label('مدينة/بلدة')->required(),
                 Forms\Components\Textarea::make('description')->label('التفاصيل'),
                 Forms\Components\TextInput::make('address')->label('العنوان'),
 
@@ -48,9 +50,18 @@ class UserResource extends Resource
             ->columns([
 
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\ToggleColumn::make('is_active')->label('مفعل'),
-                Tables\Columns\ToggleColumn::make('is_admin')->label('مدير '),
+                Tables\Columns\ToggleColumn::make('is_active')->label('مفعل')->onColor('success')
+                    ->offColor('danger')->offIcon('heroicon-m-no-symbol')
+                    ->onIcon('heroicon-m-check')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('is_admin')->label('مدير ')->sortable()->searchable()
+                ->onIcon('heroicon-m-user')->onColor('success')
+                    ->offColor('danger')
+                ,
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('صورة المستخدم')->collection('users')
+                ,
+                Tables\Columns\TextColumn::make('city.name')->label('مدينة/بلدة')->sortable()->searchable()
             ])
             ->filters([
                 //

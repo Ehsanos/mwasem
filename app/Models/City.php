@@ -13,4 +13,11 @@ class City extends Model  implements HasMedia
 
 
     protected $guarded=[];
+
+    public function products(): HasManyThrough
+    {
+        return $this->hasManyThrough(Product::class, User::class);
+    }
+
+
 }

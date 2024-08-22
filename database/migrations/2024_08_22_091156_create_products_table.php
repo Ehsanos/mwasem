@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cat_id')->nullable()->constrained('categories','id');
+            $table->foreignId('user_id')->constrained('users','id')->cascadeOnDelete();
             $table->string('name');
             $table->dateTime('start');
             $table->dateTime('end');
