@@ -37,7 +37,13 @@ class UserResource extends Resource
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->dehydrated(fn ($state) => filled($state)),
                 Forms\Components\TextInput::make('phone')->label('رقم الهاتف'),
-                Forms\Components\Select::make('city_id')->options(City::all()->pluck('name','id'))->label('مدينة/بلدة')->required(),
+                Forms\Components\Select::make('city_id')->options(City::all()->pluck('name','id'))->label('مدينة/بلدة')->required()
+                  ->relationship('city','name')
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')->label('المدينة')->required(),
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('img')->collection('cities')->label('صورة الفئة')
+                    ])
+                ,
                 Forms\Components\Textarea::make('description')->label('التفاصيل'),
                 Forms\Components\TextInput::make('address')->label('العنوان'),
 

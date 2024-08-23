@@ -57,8 +57,8 @@ class ProductResource extends Resource
                     ->where('id',$get('user_id'))
                     ->pluck('name','id')
                 )
-                    ->label('المدينة')->live()
-                  ,
+                    ->label('المدينة')
+                ,
                 Forms\Components\DateTimePicker::make('start')->label('تاريخ بداية العرض'),
                 Forms\Components\DateTimePicker::make('end')->label('تاريخ نهاية العرض')
 

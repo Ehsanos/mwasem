@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\City;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -18,7 +19,7 @@ class Product extends Model implements HasMedia
     protected $guarded=[];
 
 
-    public function category()
+    public function category():BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
