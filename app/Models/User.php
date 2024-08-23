@@ -9,13 +9,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\FilamentUser;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
+use Filament\Models\Contracts\HasAvatar;
 
-class User extends Authenticatable implements FilamentUser, HasMedia
+
+class User extends Authenticatable implements FilamentUser, HasMedia,HasAvatar
 {
     use HasApiTokens, HasFactory, Notifiable;
     use HasRoles;
@@ -54,7 +57,8 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         'phone',
         'city_id',
         'password',
-        'location'
+        'location',
+        'avatar_url'
     ];
 
     /**
@@ -76,7 +80,10 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         'email_verified_at' => 'datetime',
     ];
 
-
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url ? Storage::url("$this->avatar_url") : null;
+    }
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
@@ -85,5 +92,14 @@ class User extends Authenticatable implements FilamentUser, HasMedia
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'custom_fields' => 'array'
+        ];
     }
 }

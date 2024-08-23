@@ -23,44 +23,47 @@ class ProductResource extends Resource
 
     protected static ?string $pluralModelLabel = 'المنتجات ';
 
-
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
     protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Toggle::make('is_active')->label('مفعل/غيرمفعل ')->offColor('danger')->onColor('success'),
+//                Forms\Components\Toggle::make('is_active')->label('مفعل/غيرمفعل ')->offColor('danger')->onColor('success'),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('img')
                     ->multiple()
-                    ->collection('products')->label('صورالمنتج ')
+                    ->collection('products')->label('صورالمنتج ')->columnSpanFull()
                 ,
-                Forms\Components\Select::make('cat_id')->options(Category::all()->pluck('name', 'id'))->label('الفئة')
+                Forms\Components\Select::make('category_id')->options(Category::all()->pluck('name', 'id'))->label('الفئة')
                     ->relationship('category', 'name')
                     ->createOptionForm([
                         Forms\Components\TextInput::make('name')->label('اسم الفئة')->required(),
                         Forms\Components\SpatieMediaLibraryFileUpload::make('img')->collection('cats')->label('صورة الفئة')
-                    ]),
-                Forms\Components\TextInput::make('name')->label('اسم المنتج'),
-                Forms\Components\TextInput::make('price_before')->numeric()->label('السعر قبل'),
-                Forms\Components\TextInput::make('price_after')->numeric()->label('سعر العرض'),
+                    ])->required(),
+                Forms\Components\TextInput::make('name')->label('اسم المنتج')->required(),
+                Forms\Components\TextInput::make('price_before')->numeric()->label('السعر قبل')->required(),
+                Forms\Components\TextInput::make('price_after')->numeric()->label('سعر العرض')->required(),
                 Forms\Components\TextInput::make('quantity')->numeric()->label('الكمية'),
                 Forms\Components\Textarea::make('description')->label('الوصف'),
                 Forms\Components\Select::make('user_id')->options(
                     User::all()->pluck('name', 'city_id')
                 )->label('التاجر')
-                    ->afterStateUpdated(fn(Forms\Set $set,?string $state) =>$set('city_id',$state))
-                    ->live()
-->reactive()                ,
+                    ->afterStateUpdated(fn(Forms\Set $set, ?string $state) => $set('city_id', $state))
+                    ->live()->required()
+                    ->reactive(),
                 Forms\Components\Select::make('city_id')->options(
-                    fn(Forms\Get $get):Collection =>City::query()
-                    ->where('id',$get('user_id'))
-                    ->pluck('name','id')
+                    fn(Forms\Get $get): Collection => City::query()
+                        ->where('id', $get('user_id'))
+                        ->pluck('name', 'id')
                 )
-                    ->label('المدينة')
+                    ->label('المدينة')->required()
                 ,
-                Forms\Components\DateTimePicker::make('start')->label('تاريخ بداية العرض'),
-                Forms\Components\DateTimePicker::make('end')->label('تاريخ نهاية العرض')
+                Forms\Components\DatePicker::make('start')->label('تاريخ بداية العرض')->required(),
+                Forms\Components\DatePicker::make('end')->label('تاريخ نهاية العرض')->required()
 
 
             ]);
@@ -70,7 +73,19 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\ToggleColumn::make('is_active')->label('موافقة/رفض'),
+                Tables\Columns\TextColumn::make('user.name')->label('التاجر'),
+                Tables\Columns\TextColumn::make('name')->label('اسم العرض'),
+                Tables\Columns\TextColumn::make('category.name')->label('الفئة')->sortable()->searchable(),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('صورة المنتج ')->collection('products')
+                    ->circular()->stacked()->wrap()->limit(2),
+                Tables\Columns\TextColumn::make('start')->dateTime('m-d-Y')
+                    ->label('بداية العرض')->color('primary'),
+                Tables\Columns\TextColumn::make('end')->dateTime('m-d-Y')->label('نهاية العرض')->color('danger'),
+                Tables\Columns\TextColumn::make('price_before')->label('السعر قبل العرض'),
+                Tables\Columns\TextColumn::make('price_after')->label('سعر العرض '),
+
+
             ])
             ->filters([
                 //

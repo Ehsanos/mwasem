@@ -4,8 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\City;
 use App\Models\User;
+use App\Models\City;
+
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -19,6 +21,12 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
     protected static ?string $pluralModelLabel = 'المستخدمون ';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
@@ -26,6 +34,8 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\CheckboxList::make('roles')
+                    ->relationship('roles', 'name')->label('الصلاحيات')->columnSpanFull(),
                 Forms\Components\Toggle::make('is_admin')->label('أدمن ')->onIcon('heroicon-m-bolt')
                     ->offIcon('heroicon-m-user') ->onColor('success')
                     ->offColor('danger'),
@@ -65,7 +75,7 @@ class UserResource extends Resource
                 ->onIcon('heroicon-m-user')->onColor('success')
                     ->offColor('danger')
                 ,
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('صورة المستخدم')->collection('users')
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('صورة المستخدم')->collection('users')->circular()
                 ,
                 Tables\Columns\TextColumn::make('city.name')->label('مدينة/بلدة')->sortable()->searchable()
             ])
@@ -74,6 +84,7 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -18,7 +18,10 @@ class CityResource extends Resource
     protected static ?string $model = City::class;
     protected static ?string $pluralModelLabel = 'المدن و البلدات';
 
-
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
 
     public static function form(Form $form): Form
@@ -35,7 +38,7 @@ class CityResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('المدينة/البلدة')->sortable()->searchable(),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('صورة البلدة')->collection('cities'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('صورة البلدة')->collection('cities')->circular(),
 
             ])
             ->filters([

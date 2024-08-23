@@ -19,7 +19,10 @@ class CategoryResource extends Resource
     protected static ?string $pluralModelLabel = 'الفئات العامة';
 
     protected static ?string $navigationIcon = 'heroicon-o-swatch';
-
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -36,7 +39,7 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('الفئة'),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('صورة الفئة')->collection('cats')
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('صورة الفئة')->collection('cats')->circular()
             ])
             ->filters([
                 //
