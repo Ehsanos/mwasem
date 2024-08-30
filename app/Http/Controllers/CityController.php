@@ -11,8 +11,15 @@ class CityController extends Controller
 
     public function index()
     {
-        $all = City::all();
-        return $all;
+        $all = City::
+        with('media')->get();
+
+
+        return response([
+            'data'=>$all,
+            'message'=>'success'
+
+        ],200);
 
     }
 
@@ -20,8 +27,17 @@ class CityController extends Controller
     public function show($id)
     {
 
-        $allProductsInCity=Product::where('city_id',$id)->get();
-        return $allProductsInCity;
+        $allProductsInCity=Product::where('city_id',$id)
+            ->with('media')
+            ->get();
+        return response(
+            [
+                'data'=>$allProductsInCity,
+                'message'=>'success'
+
+            ],200
+
+        );
 
 
     }

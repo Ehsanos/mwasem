@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Product;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Models\Category;
 class CategoryController extends Controller
@@ -10,7 +11,14 @@ class CategoryController extends Controller
 
         $allCats=Category::with('media')->get();
 
-        return $allCats;
+
+
+        return response([
+
+            'data'=>$allCats,
+            'message'=>'success'
+
+        ],200) ;
 
 
     }
@@ -21,8 +29,16 @@ class CategoryController extends Controller
 
             $allProductInCategory=Product::where('category_id',$id)
                 ->where('is_active',true)
+                ->with('media')
                 ->get();
-            return $allProductInCategory;
+            return response()->json([
+                'data'=>$allProductInCategory,
+                'message'=>'success'
+
+                    ],200
+
+            );
+
 
         }
 

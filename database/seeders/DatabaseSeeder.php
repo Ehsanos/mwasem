@@ -18,9 +18,13 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@admin.com',
             'password' => bcrypt('password'),
-            'is_admin' => true
+            'is_admin' => true,
+            'city_id'=>1
+
         ]);
 
         $this->call(CitySeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(ProductSeeder::class);
     }
 }

@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 class ProductResource extends Resource
@@ -45,8 +46,9 @@ class ProductResource extends Resource
                         Forms\Components\SpatieMediaLibraryFileUpload::make('img')->collection('cats')->label('صورة الفئة')
                     ])->required(),
                 Forms\Components\TextInput::make('name')->label('اسم المنتج')->required(),
-                Forms\Components\TextInput::make('price_before')->numeric()->label('السعر قبل')->required(),
-                Forms\Components\TextInput::make('price_after')->numeric()->label('سعر العرض')->required(),
+                Forms\Components\TextInput::make('price_before')->minValue(0)->numeric()->label('السعر قبل')
+                    ->required(),
+                Forms\Components\TextInput::make('price_after')->minValue(0)->numeric()->label('سعر العرض')->required(),
                 Forms\Components\TextInput::make('quantity')->numeric()->label('الكمية'),
                 Forms\Components\Textarea::make('description')->label('الوصف'),
                 Forms\Components\Select::make('user_id')->options(
@@ -62,8 +64,12 @@ class ProductResource extends Resource
                 )
                     ->label('المدينة')->required()
                 ,
-                Forms\Components\DatePicker::make('start')->label('تاريخ بداية العرض')->required(),
-                Forms\Components\DatePicker::make('end')->label('تاريخ نهاية العرض')->required()
+                Forms\Components\DatePicker::make('start')->minDate(Carbon::today())
+                    ->rules(['after_or_equal:today'])
+                    ->label('تاريخ بداية العرض')->required(),
+                Forms\Components\DatePicker::make('end')
+                    ->minDate(Carbon::today())
+                    ->label('تاريخ نهاية العرض')->required()
 
 
             ]);
