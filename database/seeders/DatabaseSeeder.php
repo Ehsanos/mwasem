@@ -14,11 +14,15 @@ class DatabaseSeeder extends Seeder
     {
         \App\Models\User::factory(30)->create();
 
+        $this->call(CitySeeder::class);
+
+
         \App\Models\User::factory()->create([
             'name' => 'admin',
             'email' => 'admin@admin.com',
             'password' => bcrypt('password'),
             'is_admin' => true,
+            'is_active'=>true,
             'city_id'=>1
 
         ]);
