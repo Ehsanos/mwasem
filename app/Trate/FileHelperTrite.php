@@ -25,6 +25,19 @@ trait FileHelperTrite
             return asset('images/default.png');
         }
     }
+    public function getImages($collection): string
+    {
+        if ($this->hasMedia($collection)) {
+            $list = [];
+            foreach ($this->getMedia($collection) as $media) {
+                $list[$media->getAttribute('id')] = $media->getUrl('webp');
+            }
+            return collect($list);
+        }
+        return collect(['default' => asset('images/default.png')]);
+
+    }
+
 
 
     public function getImagesAttribute(): Collection

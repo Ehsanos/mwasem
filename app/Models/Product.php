@@ -18,7 +18,7 @@ class Product extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
     use FileHelperTrite;
-
+protected $casts=["is_active"=>"boolean"];
     protected $guarded=[];
 
 
