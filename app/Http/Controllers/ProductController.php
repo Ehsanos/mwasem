@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
 use  App\Models\Product;
 
@@ -19,9 +20,7 @@ class ProductController extends Controller
             [
                 'status' => 'success',
                 'message' => 'return  Products successfully!',
-
-                'data' => $all,
-
+                'data' => ProductResource::collection($all),
             ]);
 
 
