@@ -25,6 +25,9 @@ trait FileHelperTrite
             return asset('images/default.png');
         }
     }
+
+
+//    test for push on github
     public function getImages($collection): string
     {
         if ($this->hasMedia($collection)) {
