@@ -17,6 +17,7 @@ class ProductResource extends JsonResource
             "category" => new CategoryResource($this->category),
             "user" => $this->user,
             "start" => $this->start,
+            "end" => $this->end,
             "is_active" => $this->is_active,
             "price_before" => $this->price_before,
             "price_after" => $this->price_after,

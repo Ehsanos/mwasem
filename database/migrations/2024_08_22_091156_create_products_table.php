@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('quantity')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('city_id')->nullable()->constrained('cities','id');
-
             $table->timestamps();
         });
     }
