@@ -5,16 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PaginationResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
 
-        $all = Product::where('is_active', true)
-            ->with('media')
+        $all = Product::with('media')
+            ->when(isset($request->q), function ($q) use ($request) {
+                return $q->where('name', 'like', "%" . $request->q . "%")->orWhere('description', 'LIKE', '%' . $request->q . "%");
+            })
+            ->when(isset($request->category_id), function ($q) use ($request) {
+                return $q->whereCategorId($request->category_id);
+            })->where('is_active', true)
             ->paginate(2);
+
 
         return response()->json(
             [
