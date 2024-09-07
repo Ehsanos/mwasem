@@ -18,7 +18,7 @@ class ProductController extends Controller
                 return $q->where('name', 'like', "%" . $request->q . "%")->orWhere('description', 'LIKE', '%' . $request->q . "%");
             })
             ->when(isset($request->category_id), function ($q) use ($request) {
-                return $q->whereCategorId($request->category_id);
+                return $q->where("category_id",$q ,$request->category_id);
             })->where('is_active', true)
             ->paginate(2);
 
