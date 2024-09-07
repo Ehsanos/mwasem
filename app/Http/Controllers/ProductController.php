@@ -14,12 +14,13 @@ class ProductController extends Controller
     {
 
         $all = Product::with('media')
+            ->where('is_active', true)
             ->when(isset($request->q), function ($q) use ($request) {
                 return $q->where('name', 'like', "%" . $request->q . "%")->orWhere('description', 'LIKE', '%' . $request->q . "%");
             })
             ->when(isset($request->category_id), function ($q) use ($request) {
-                return $q->where("category_id" ,$request->category_id);
-            })->where('is_active', true)
+                return $q->where("category_id", $request->category_id);
+            })
             ->paginate(2);
 
 
