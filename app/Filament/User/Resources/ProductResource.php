@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\City;
+use Carbon\Carbon;
 use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -39,7 +40,7 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('is_active')->default(0),
+//                Forms\Components\TextInput::make('is_active')->default(0),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('img')->multiple()->collection('products')->label('صورالمنتج ')
                 ->columnSpanFull(),
                 Forms\Components\Select::make('category_id')->options(Category::all()->pluck('name', 'id'))->label('الفئة'),
@@ -50,8 +51,12 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('quantity')->numeric()->label('الكمية'),
                 Forms\Components\Textarea::make('description')->label('الوصف'),
 
-                Forms\Components\DatePicker::make('start')->label('تاريخ بداية العرض')->required(),
+                Forms\Components\DatePicker::make('start')->label('تاريخ بداية العرض')
+                    ->rule('after_or_equal:today')
+                    ->required()->default(now()
+                    ->format('Y-m-d')),
                 Forms\Components\DatePicker::make('end')->label('تاريخ نهاية العرض')->required()
+                    ->default(Carbon::now()->addDay()->format('Y-m-d'))
 
 
             ]);
