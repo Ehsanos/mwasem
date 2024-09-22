@@ -13,7 +13,7 @@ class CheckProductDate extends Command
      *
      * @var string
      */
-    protected $signature = 'check:product-date';
+    protected $signature = 'product-date';
 
     /**
      * The console command description.
