@@ -49,7 +49,7 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('price_before')->minValue(0)->numeric()->label('السعر قبل')
                     ->required(),
                 Forms\Components\TextInput::make('price_after')->minValue(0)->numeric()->label('سعر العرض')->required(),
-                Forms\Components\TextInput::make('quantity')->numeric()->label('الكمية'),
+                Forms\Components\TextInput::make('quantity')->numeric()->label('الكمية')->required(),
                 Forms\Components\Textarea::make('description')->label('الوصف'),
                 Forms\Components\Select::make('user_id')->options(
                     User::all()->pluck('name', 'city_id')
@@ -65,11 +65,11 @@ class ProductResource extends Resource
                     ->label('المدينة')->required()
                 ,
                 Forms\Components\DatePicker::make('start')->minDate(Carbon::today())
-                    ->rules(['after_or_equal:today'])
+                    ->rules(['after_or_equal:today'])->format('Y-m-d')
                     ->label('تاريخ بداية العرض')->required(),
                 Forms\Components\DatePicker::make('end')
                     ->minDate(Carbon::today())
-                    ->label('تاريخ نهاية العرض')->required()
+                    ->label('تاريخ نهاية العرض')->required()->format('Y-m-d')
 
 
             ]);

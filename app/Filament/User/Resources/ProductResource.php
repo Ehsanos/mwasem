@@ -48,7 +48,7 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('name')->label('اسم المنتج')->required(),
                 Forms\Components\TextInput::make('price_before')->numeric()->label('السعر قبل')->required(),
                 Forms\Components\TextInput::make('price_after')->numeric()->label('سعر العرض')->required(),
-                Forms\Components\TextInput::make('quantity')->numeric()->label('الكمية'),
+                Forms\Components\TextInput::make('quantity')->numeric()->label('الكمية')->required(),
                 Forms\Components\Textarea::make('description')->label('الوصف'),
 
                 Forms\Components\DatePicker::make('start')->label('تاريخ بداية العرض')
