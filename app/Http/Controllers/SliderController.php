@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SliderResource;
+use App\Models\Setting;
 use App\Models\Slider;
 
 class SliderController extends Controller
@@ -14,11 +15,9 @@ class SliderController extends Controller
         return
             response()->json([
                 'data' => SliderResource::collection($allSliders),
+                "show_slider" => Setting::first()?->show_slider ?? false,
                 'status' => 'success',
                 'message' => 'all Sliders '
             ], 200);
-
-
     }
-
 }
